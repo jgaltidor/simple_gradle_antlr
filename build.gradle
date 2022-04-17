@@ -4,22 +4,15 @@ plugins {
     id "application"
 }
 
+def mainClassName = "jga.example.antlr.Main"
+def generatedSrcDir = "build/generated-src"
+def generatedAntlrSrcPath = generatedSrcDir + "/main/antlr"
+
 generateGrammarSource {
-    outputDirectory = file("generated-src/antlr/main/")
+    outputDirectory = file(generatedAntlrSrcPath)
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir "generated-src/antlr/main/"
-        }
-    }
-}
-
-
-clean {
-    delete "generated-src"
-}
+sourceSets.main.java.srcDir generatedAntlrSrcPath
 
 repositories {
     mavenCentral()
@@ -31,19 +24,19 @@ dependencies {
 }
 
 application {
-    mainClass = 'jga.example.antlr.Main'
+    mainClass = mainClassName
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'jga.example.antlr.Main'
+        attributes 'Main-Class': mainClassName
     }
 }
 
 task uberJar (type: Jar) {
   archiveClassifier = 'uber'
   manifest {
-    attributes 'Main-Class': 'jga.example.antlr.Main'
+    attributes 'Main-Class': mainClassName
   }
   from {
     configurations.runtimeClasspath
